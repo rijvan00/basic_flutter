@@ -27,7 +27,9 @@ class _CarsListState extends State<CarsList> {
       body: FutureBuilder<List<Car>>(
         future: _service.getCars(),
         builder: (BuildContext context, AsyncSnapshot<List<Car>> snapshot) {
-
+          if(snapshot.hasError){
+            return const Center(child: Text("Error loading data"),);
+          }
           if(snapshot.data == null){
             return const Center(child: CircularProgressIndicator(),);
           }
