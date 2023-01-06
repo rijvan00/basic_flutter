@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:prac/constants/endpoints.dart';
 
@@ -10,14 +11,9 @@ class CarService{
   final _networkService = NetworkService();
 
   Future<List<Car>> getCars() async {
-    final List<Car> cars = [];
+    log('Get Cars Fired!');
     final response = await _networkService.getRequest(ApiEndpoint.cars);
-    final data = jsonDecode(response);
-
-    for(var car in data){
-      cars.add(Car.fromJson(car));
-    }
-    return cars;
+    final List data = jsonDecode(response);
+    return data.map((e) => Car.fromJson(e)).toList();
   }
-
 }
