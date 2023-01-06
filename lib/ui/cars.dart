@@ -12,14 +12,7 @@ class CarsList extends StatefulWidget {
 }
 
 class _CarsListState extends State<CarsList> {
-
-  List<Car> cars = [];
   final CarService _service = CarService();
-  @override
-  void initState() {
-    super.initState();
-    getLoadCars();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,18 +24,19 @@ class _CarsListState extends State<CarsList> {
         centerTitle: true,
         elevation: 0.0,
       ),
-      body: ListView.builder(
-        itemCount: cars.length,
-        itemBuilder: (context, index) => CarCard(car: cars[index]),
+      body: FutureBuilder<List<Car>>(
+        future: _service.getCars(),
+        builder: (BuildContext context, AsyncSnapshot<List<Car>> snapshot) {
+
+          if(snapshot.data == null){
+            return const Center(child: CircularProgressIndicator(),);
+          }
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) => CarCard(car: snapshot.data![index]),
+          );
+        },
       ),
     );
   }
-
-  void getLoadCars(){
-    _service.getCars().then((value){
-      cars = value;
-      setState(() {});
-    });
-  }
-
 }
